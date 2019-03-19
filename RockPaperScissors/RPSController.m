@@ -24,11 +24,18 @@
 -(NSString*)messageForTheGame {
     NSString *yourMoveString = [[NSString alloc] initWithFormat:@"Your move - %@", _game.firstTurn.description];
     NSString *opponentsMoveString = [[NSString alloc] initWithFormat:@"Opponent's move - %@", _game.secondTurn.description];
-    NSString *winnerString = [[_game winner] description];
-    NSString *loserString = [[_game loser] description];
-    NSString *resultString = [self resultString];
-    NSString *wholeString = [[NSString alloc] initWithFormat:@"\n%@\n%@\n%@ defeats %@. %@", yourMoveString, opponentsMoveString, winnerString, loserString, resultString];
-    return wholeString;
+    if (_game.firstTurn.move == _game.secondTurn.move) {
+        NSString *wholeString = [[NSString alloc] initWithFormat:@"\n%@\n%@\n%@", yourMoveString, opponentsMoveString, @"It's a tie!"];
+        return wholeString;
+    } else {
+        NSString *yourMoveString = [[NSString alloc] initWithFormat:@"Your move - %@", _game.firstTurn.description];
+        NSString *opponentsMoveString = [[NSString alloc] initWithFormat:@"Opponent's move - %@", _game.secondTurn.description];
+        NSString *winnerString = [[_game winner] description];
+        NSString *loserString = [[_game loser] description];
+        NSString *resultString = [self resultString];
+        NSString *wholeString = [[NSString alloc] initWithFormat:@"\n%@\n%@\n%@ defeats %@. %@", yourMoveString, opponentsMoveString, winnerString, loserString, resultString];
+        return wholeString;
+    }
 }
 
 @end

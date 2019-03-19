@@ -10,12 +10,37 @@
 #import "RPSGame.h"
 #import "RPSController.h"
 
+#if __has_feature(objc_arc)
+#define DLog(format, ...) CFShow((__bridge CFStringRef)[NSString stringWithFormat:format, ## __VA_ARGS__]);
+#else
+#define DLog(format, ...) CFShow([NSString stringWithFormat:format, ## __VA_ARGS__]);
+#endif
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        RPSController* gameController = [[RPSController alloc]init];
-        [gameController throwDown:Paper];
-        NSString* resultMessage = [gameController messageForTheGame];
-        NSLog(@"%@", resultMessage);
+        DLog(@"Choose a move:\n1.Rock\n2.Paper\n3.Scissors\n");
+        while (true) {
+            NSFileHandle *inputFileHandle = [NSFileHandle fileHandleWithStandardInput];
+            NSData *inputData = [NSData dataWithData:[inputFileHandle availableData]];
+            NSString *inputString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
+            inputString = [inputString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            Move move = Invalid;
+            if([inputString isEqual: @"1"]) {
+                move = Rock;
+            } else if([inputString isEqual: @"2"]) {
+                move = Paper;
+            } else if([inputString isEqual: @"3"]) {
+                move = Scissors;
+            }
+            if(move == Invalid) {
+                DLog(@"Wrong input!");
+            } else {
+                RPSController* gameController = [[RPSController alloc]init];
+                [gameController throwDown: move];
+                NSString* resultMessage = [gameController messageForTheGame];
+                DLog(@"%@", resultMessage);
+                return 0;
+            }
+        }
     }
-    return 0;
 }
